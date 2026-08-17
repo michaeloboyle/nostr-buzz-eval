@@ -19,7 +19,7 @@ terraform output    # prints the wss endpoint + ssh command
 terraform destroy   # tear it down
 ```
 
-The relay comes up on `wss://<public-ip>:7000`. Point Buzz clients/agents there.
+The relay comes up on `wss://<public-ip>:3000`. Point Buzz clients/agents there.
 
 ## Security defaults
 

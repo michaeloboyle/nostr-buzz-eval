@@ -1,5 +1,7 @@
 # Nostr / Buzz as an agent-coordination substrate
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/michaeloboyle/nostr-buzz-eval)
+
 A short, runnable evaluation kit for replacing a Slack + bots coordination layer with
 **Nostr** (open protocol) and **Buzz** (Block's open-source, Apache-2.0 runtime built on it:
 `github.com/block/buzz`).
@@ -19,12 +21,16 @@ The decisions carry the weight, not this README. Start at
 
 ## Deploy it in ~10 minutes
 
-Self-host the relay stack (relay + Postgres + Redis + MinIO) and mint an agent identity:
+Self-host the relay stack (relay + Postgres + Redis + MinIO):
+
+**Click to try:** open this repo in GitHub Codespaces (badge above), then:
 
 ```bash
-cd deploy
-./quickstart.sh          # brings up the stack, mints a keypair, posts + reads one message
+cd deploy && ./quickstart.sh    # generates .env with fresh secrets, brings up the stack
 ```
+
+Codespaces is for **evaluation** (an in-browser dev container), not a public relay. For a
+reachable relay, use the IaC below or a VM.
 
 Prefer infrastructure-as-code? Provision a reachable relay instead of running it locally:
 
@@ -33,9 +39,27 @@ Prefer infrastructure-as-code? Provision a reachable relay instead of running it
 - `deploy/terraform/` — a minimal, validated Terraform example (VM + firewall + cloud-init).
   `terraform apply` provisions **billable** resources; see `deploy/terraform/README.md`.
 
-`deploy/` is a **sanitized generic template** adapted from the upstream
-`github.com/block/buzz` `deploy/compose`. No keys, community IDs, or hostnames from any real
-environment. Verify against upstream before production use.
+`deploy/` mirrors the upstream `github.com/block/buzz` `deploy/compose` (sanitized: no keys,
+IDs, or hostnames from any real environment; secrets are generated locally). Pin the image
+tag against upstream before production use.
+
+## After it's running (using Buzz)
+
+Booting the relay is the deploy boundary this kit owns. Day-to-day **client usage is Buzz's**,
+so for installing/logging into the Buzz client, sending messages, DMs, and the UI, follow the
+upstream docs: **[github.com/block/buzz](https://github.com/block/buzz)**. This repo does not
+duplicate client how-to; it would only drift from theirs.
+
+Two operator steps that are deploy-specific, so they live here:
+
+- **Point a client at your relay:** `wss://<host>:3000` (or your tunnel / VM URL).
+- **Invite people (relay membership):** add each person or agent by public key —
+  ```bash
+  docker compose exec relay /usr/local/bin/buzz-admin add-member --pubkey <hex> --role member
+  docker compose exec relay /usr/local/bin/buzz-admin list-members
+  ```
+  Adding several? `sleep 1` between calls (avoids same-second roster-event collisions); never
+  add in parallel.
 
 ## Prove it before you trust it
 
@@ -51,6 +75,7 @@ docs/sequence-diagrams.md  common Slack use cases executed on Buzz/Nostr (Mermai
 docs/user-lifecycle.md     setup, onboarding, account recovery (Mermaid)
 docs/community-topology.md network view of a venture community with activity (Mermaid)
 deploy/                    compose + quickstart, plus IaC (cloud-init + Terraform)
+.devcontainer/             one-click "Open in Codespaces" (click-to-try in browser)
 eval/                      falsifiable test vs a Slack-bot baseline (run third)
 ```
 

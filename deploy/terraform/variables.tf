@@ -23,9 +23,9 @@ variable "disk_gb" {
 }
 
 variable "relay_port" {
-  description = "Port the relay listens on (wss)."
+  description = "Port the relay listens on (http/ws)."
   type        = number
-  default     = 7000
+  default     = 3000
 }
 
 variable "ssh_key_name" {

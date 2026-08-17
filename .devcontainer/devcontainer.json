@@ -1,0 +1,12 @@
+{
+  "name": "nostr-buzz-eval",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "relay (http/ws)" }
+  },
+  "postCreateCommand": "echo 'Ready. Try it:  cd deploy && ./quickstart.sh'"
+}
