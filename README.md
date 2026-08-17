@@ -39,10 +39,12 @@ beats the baseline — run it, do not take the table's word.
 ## What's in here
 
 ```
-docs/adrs/               the decisions (read first)
-docs/sequence-diagrams.md common Slack use cases executed on Buzz/Nostr (Mermaid)
-deploy/                  compose + quickstart (run second)
-eval/                    falsifiable test vs a Slack-bot baseline (run third)
+docs/adrs/                 the decisions (read first)
+docs/sequence-diagrams.md  common Slack use cases executed on Buzz/Nostr (Mermaid)
+docs/user-lifecycle.md     setup, onboarding, account recovery (Mermaid)
+docs/community-topology.md network view of a venture community with activity (Mermaid)
+deploy/                    compose + quickstart (run second)
+eval/                      falsifiable test vs a Slack-bot baseline (run third)
 ```
 
 ## Honest scope
