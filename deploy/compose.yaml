@@ -1,0 +1,63 @@
+# Sanitized generic template. Adapted from github.com/block/buzz deploy/compose.
+# No keys, IDs, or hostnames from any real deployment. Verify against upstream before prod.
+#
+# Stack: Buzz relay + Postgres 17 + Redis 7 + MinIO (S3-compatible blob store).
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: buzz
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-locally}
+      POSTGRES_DB: buzz
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buzz -d buzz"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+
+  minio:
+    image: minio/minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-buzz}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-locally}
+    volumes:
+      - miniodata:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  relay:
+    # Pin to the upstream Buzz relay image/tag you are evaluating.
+    image: ghcr.io/block/buzz-relay:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgres://buzz:${POSTGRES_PASSWORD:-change-me-locally}@postgres:5432/buzz
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-buzz}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-change-me-locally}
+      # Relay signing key. Generate locally; never commit a real key.
+      RELAY_PRIVATE_KEY: ${RELAY_PRIVATE_KEY:?set RELAY_PRIVATE_KEY in your local .env}
+    ports:
+      - "7000:7000"   # wss relay endpoint
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
