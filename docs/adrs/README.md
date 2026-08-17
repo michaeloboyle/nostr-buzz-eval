@@ -24,7 +24,7 @@ contract *is* the deliverable, no code required to evaluate it.
 4. **004** — how agents actually talk to it (code collab, memory, runtime bridge).
 5. **005** — stand it up yourself; verified first-hand, sanitized template in `deploy/`.
 6. **006** — the honest ledger: where Slack still wins, what is claimed-but-untested.
-7. **007** — running it across a portfolio of ventures: tenancy and isolation by sensitivity.
+7. **007** — running it across a portfolio: one community per venture, relay placement by sensitivity.
 
 Read 006 before deciding. It names the gaps on purpose; a one-sided ADR set is marketing.
 

@@ -13,45 +13,55 @@ thing to stand up, but it co-mingles data, membership, and backups across trust 
 that should not touch. Portfolio scale forces a tenancy decision the single-team case never
 raises.
 
+Two axes, kept separate:
+- **Community** — the tenancy boundary (membership, channels, record).
+- **Relay** — where a community is hosted (the data-placement boundary).
+
 ## Decision
 
-**Isolate by sensitivity, not by convenience.** Keep each venture's coordination data at the
-least-exposed viable location, and never place higher-sensitivity data in a lower-control
-tenancy.
+**One community per venture. Always.** The community is the unit of isolation: each venture
+gets its own community, its own membership list, and its own channels. Ventures are never
+separated only by channels inside a shared community. This is uniform and non-negotiable, so
+tenancy is predictable and a venture's blast radius is always exactly one community.
 
-- **Internal / low-sensitivity ventures** share one self-hosted relay, one community, and are
-  separated by **channels** (one or a few per venture). Cheap: one relay to operate.
-- **Client-bearing, regulated, or confidential ventures** get a **dedicated relay** (or a
-  dedicated community with isolated membership), so data placement, member lists, blob
-  storage, and backups do not cross a trust boundary. Blast radius is bounded to one venture.
+**Relay placement is then chosen by sensitivity:**
+- **Internal / low-sensitivity venture-communities** may share one self-hosted relay (one
+  relay hosting several per-venture communities). Cheap to operate; isolation still holds at
+  the community boundary.
+- **Client-bearing, regulated, or confidential venture-communities** get a **dedicated
+  relay**, so data placement, blob storage, and backups do not share infrastructure across a
+  trust boundary.
 - **Managed hosting** (`*.communities.buzz.xyz`) is reserved for genuinely public, non-
-  sensitive collaboration only, never for internal or client data. (See ADR-005.)
+  sensitive communities only, never for internal or client data. (See ADR-005.)
 
 ## Why this scales: identity is the load-bearing primitive
 
-Because agent identity is a portable keypair (ADR-003), the tenancy model scales cleanly:
+Because agent identity is a portable keypair (ADR-003), the model scales cleanly:
 
-- An agent that serves more than one venture uses a **distinct keypair per trust boundary**,
-  so attribution, membership, and revocation stay scoped to a venture.
-- Migrating a venture from a shared relay to a dedicated one is a **data + membership move,
-  not a re-keying**: identities are portable across relays.
-- Onboarding a new venture is: mint its agent keypairs → choose shared-channel vs dedicated-
-  relay by its sensitivity → add members → wire channels. Repeatable, not bespoke.
+- An agent that serves more than one venture uses a **distinct keypair per venture-
+  community**, so attribution, membership, and revocation stay scoped to one venture.
+- Moving a venture-community from a shared relay to a dedicated one is a **data + membership
+  move, not a re-keying**: identities are portable across relays.
+- Onboarding a venture is a fixed checklist: create its community → mint its agent keypairs →
+  choose shared-relay vs dedicated-relay by sensitivity → add members → wire channels.
 
 ## Consequences
 
 **Positive**
-- Clean isolation and a defensible data-placement story per venture.
-- Bounded blast radius: a compromise or leak is contained to one venture's tenancy.
-- Onboarding a venture is a checklist, not a project.
+- Uniform, predictable isolation: one venture equals one community, no exceptions to reason
+  about.
+- Bounded blast radius: a compromise or leak is contained to a single venture-community.
+- Onboarding a venture is a checklist, not a bespoke design each time.
 
 **Negative / operational**
-- More relays to operate for isolated ventures (backups, uptime per relay).
-- A shared-vs-dedicated call must be made at each venture's onboarding, and revisited if its
-  sensitivity changes (e.g. a venture that starts internal and later takes on client data).
+- More communities to administer than a single shared one (membership per venture).
+- A shared-relay vs dedicated-relay call must still be made per venture at onboarding, and
+  revisited if a venture's sensitivity changes (e.g. an internal venture later takes on
+  client data — move its community to a dedicated relay, no re-keying).
 
 ## Notes
 
-Shared-vs-dedicated is a **placement decision made per venture at onboarding**, not a global
-default. When a venture's sensitivity is uncertain, isolate first; merging into a shared
-community later is cheaper and safer than extracting co-mingled data after the fact.
+Community-per-venture is fixed; relay placement is the only per-venture decision, made at
+onboarding by sensitivity. When sensitivity is uncertain, place the community on a dedicated
+relay first; consolidating onto a shared relay later is cheaper and safer than extracting
+co-mingled data after the fact.

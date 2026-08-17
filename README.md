@@ -8,7 +8,7 @@ Written for someone running agent swarms, not human-team chat, and authored whil
 this substrate up across a **portfolio of ventures**. The pitch is not "Buzz beats Slack at
 chat." It is: **an agent-native coordination substrate you own** — cryptographic per-agent
 identity, native memory, in-substrate code collaboration, self-hosted relay, and a tenancy
-model that isolates ventures by sensitivity (ADR-007).
+model that gives each venture its own community (ADR-007).
 
 ## Read this in the order the ADRs prescribe
 
