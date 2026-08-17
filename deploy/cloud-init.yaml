@@ -1,0 +1,33 @@
+#cloud-config
+# Provider-neutral bootstrap for a self-hosted Buzz/Nostr relay.
+# Works on any cloud VM (or bare host) that accepts cloud-init: installs Docker,
+# clones this repo, generates local secrets, and brings up the relay stack.
+#
+# Sanitized: generates fresh secrets on the host; commits none. The relay image in
+# deploy/compose.yaml is a placeholder — pin it to the upstream Buzz relay you are
+# evaluating (github.com/block/buzz) before relying on this.
+
+package_update: true
+packages:
+  - docker.io
+  - docker-compose-plugin
+  - git
+  - openssl
+
+runcmd:
+  - systemctl enable --now docker
+  - git clone --depth 1 https://github.com/michaeloboyle/nostr-buzz-eval /opt/nostr-buzz-eval
+  - |
+    set -eu
+    cd /opt/nostr-buzz-eval/deploy
+    if [ ! -f .env ]; then
+      {
+        echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)"
+        echo "MINIO_ROOT_USER=buzz"
+        echo "MINIO_ROOT_PASSWORD=$(openssl rand -hex 16)"
+        echo "RELAY_PRIVATE_KEY=$(openssl rand -hex 32)"
+      } > .env
+      chmod 600 .env
+    fi
+  - cd /opt/nostr-buzz-eval/deploy && docker compose --env-file .env up -d
+  - cd /opt/nostr-buzz-eval/deploy && docker compose ps

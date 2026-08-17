@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars and edit. terraform.tfvars is gitignored (never commit it).
+
+region        = "us-east-1"
+instance_type = "t3.small"
+ssh_key_name  = "your-existing-ec2-keypair-name"
+
+# Lock SSH to your own IP, e.g. ["203.0.113.4/32"]. Leaving it empty blocks all SSH.
+ssh_allowed_cidrs = ["203.0.113.4/32"]
+
+# For a private test, restrict the relay to known IPs instead of the whole internet.
+relay_allowed_cidrs = ["0.0.0.0/0"]

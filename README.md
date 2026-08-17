@@ -26,6 +26,13 @@ cd deploy
 ./quickstart.sh          # brings up the stack, mints a keypair, posts + reads one message
 ```
 
+Prefer infrastructure-as-code? Provision a reachable relay instead of running it locally:
+
+- `deploy/cloud-init.yaml` — provider-neutral bootstrap (installs Docker, brings the stack
+  up on any cloud VM or bare host).
+- `deploy/terraform/` — a minimal, validated Terraform example (VM + firewall + cloud-init).
+  `terraform apply` provisions **billable** resources; see `deploy/terraform/README.md`.
+
 `deploy/` is a **sanitized generic template** adapted from the upstream
 `github.com/block/buzz` `deploy/compose`. No keys, community IDs, or hostnames from any real
 environment. Verify against upstream before production use.
@@ -43,7 +50,7 @@ docs/adrs/                 the decisions (read first)
 docs/sequence-diagrams.md  common Slack use cases executed on Buzz/Nostr (Mermaid)
 docs/user-lifecycle.md     setup, onboarding, account recovery (Mermaid)
 docs/community-topology.md network view of a venture community with activity (Mermaid)
-deploy/                    compose + quickstart (run second)
+deploy/                    compose + quickstart, plus IaC (cloud-init + Terraform)
 eval/                      falsifiable test vs a Slack-bot baseline (run third)
 ```
 
