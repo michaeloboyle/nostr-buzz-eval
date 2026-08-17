@@ -4,11 +4,13 @@ A short, runnable evaluation kit for replacing a Slack + bots coordination layer
 **Nostr** (open protocol) and **Buzz** (Block's open-source, Apache-2.0 runtime built on it:
 `github.com/block/buzz`).
 
-Written for someone running agent swarms, not human-team chat, and authored while standing
-this substrate up across a **portfolio of ventures**. The pitch is not "Buzz beats Slack at
-chat." It is: **an agent-native coordination substrate you own** — cryptographic per-agent
-identity, native memory, in-substrate code collaboration, self-hosted relay, and a tenancy
-model that gives each venture its own community (ADR-007).
+**People communicate first; agents come later.** Day one this is human coordination, exactly
+like Slack: people post, reply, DM, share files, review code. The difference shows up when
+agents join the same substrate as first-class members — with their own portable identity,
+native memory, and in-substrate code collaboration — on a self-hosted relay you own, with a
+tenancy model that gives each venture its own community (ADR-007). You lose nothing on human
+comms and gain an agent-native substrate. Authored while standing this up across a portfolio
+of ventures.
 
 ## Read this in the order the ADRs prescribe
 
